@@ -80,6 +80,10 @@ hook.Add( "InitPostEntity", "REDSUSHI:LoadSlots", function()
 	REDSUSHI.LoadSlots()
 end )
 
+hook.Add("PostCleanupMap", "REDSUSHI:PostCleanupMapLoadSlots", function()
+	REDSUSHI.LoadSlots()
+end )
+
 hook.Add("PlayerSay", "REDSUSHI:SaveSlots", function(ply, text)
 	if string.sub(text, 1, 10) == "!savebrs" then
 		if table.HasValue(REDSUSHI.CONFIG.AuthorisedRanks, ply:GetUserGroup()) then
