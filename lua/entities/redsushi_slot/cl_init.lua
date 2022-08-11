@@ -180,7 +180,7 @@ function ENT:Draw()
 	ang:RotateAroundAxis(ang:Forward(), 90)
 
 	--Graphic 2
-	cam.Start3D2D(self:WorldOffset(Vector(-12.3,76.6,-6.22)), ang, 0.05)
+	cam.Start3D2D(self:WorldOffset(Vector(-12.3,76.6,-6.52)), ang, 0.05)
 		--draw.RoundedBox(4,0,0, 490, 290, Color(255,255,255,100))
 		if not self:GetIsRedScreen() then
 			--Draw the mascot happy
