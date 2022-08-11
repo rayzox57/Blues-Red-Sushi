@@ -274,13 +274,13 @@ function ENT:StartFreeSpin(ply, previousWinAmount)
 					if item1 == REDSUSHI.Symbols.JACKPOT and item2 == REDSUSHI.Symbols.JACKPOT and item3 == REDSUSHI.Symbols.JACKPOT then
 						self:StopRedscreen()
 						self:TriggerJackpot()
-						REDSUSHI.CONFIG.AddMoney(ply, isWin.pay * (REDSUSHI.CONFIG.CreditValue * self:GetBetAmount()))
+						REDSUSHI.CONFIG.addMoney(ply, isWin.pay * (REDSUSHI.CONFIG.CreditValue * self:GetBetAmount()))
 						ply:ChatPrint("[SLOT] You won $"..(isWin.pay * REDSUSHI.CONFIG.CreditValue * self:GetBetAmount()).."!")
 					else
 						if self:GetWinAmount() >= REDSUSHI.CONFIG.SubJackpotValue then
 							self:StopRedscreen()
 							self:TriggerJackpot()
-							REDSUSHI.CONFIG.AddMoney(ply, isWin.pay * (REDSUSHI.CONFIG.CreditValue * self:GetBetAmount()))
+							REDSUSHI.CONFIG.addMoney(ply, isWin.pay * (REDSUSHI.CONFIG.CreditValue * self:GetBetAmount()))
 							ply:ChatPrint("[SLOT] You won $"..(isWin.pay * REDSUSHI.CONFIG.CreditValue * self:GetBetAmount()).."!")
 						else
 
@@ -293,7 +293,7 @@ function ENT:StartFreeSpin(ply, previousWinAmount)
 								self:TriggerWinscreen(self:GetWinAmount())
 							end
 
-							REDSUSHI.CONFIG.AddMoney(ply, isWin.pay * (REDSUSHI.CONFIG.CreditValue * self:GetBetAmount()))
+							REDSUSHI.CONFIG.addMoney(ply, isWin.pay * (REDSUSHI.CONFIG.CreditValue * self:GetBetAmount()))
 							ply:ChatPrint("[SLOT] You won $"..(isWin.pay * REDSUSHI.CONFIG.CreditValue * self:GetBetAmount()).."!")
 						end
 					end
@@ -315,8 +315,8 @@ end
 
 function ENT:StartSpin(ply)
 
-	if ply:canAfford(REDSUSHI.CONFIG.CreditValue * self:GetBetAmount()) then
-		REDSUSHI.CONFIG.TakeMoney(ply, (REDSUSHI.CONFIG.CreditValue * self:GetBetAmount()))
+	if REDSUSHI.CONFIG.canAfford(ply, REDSUSHI.CONFIG.CreditValue * self:GetBetAmount()) then
+		REDSUSHI.CONFIG.takeMoney(ply, (REDSUSHI.CONFIG.CreditValue * self:GetBetAmount()))
 	else
 		ply:ChatPrint("[SLOT] You cannot afford to use this machine, you need at least $"..REDSUSHI.CONFIG.CreditValue * self:GetBetAmount())
 		return false
@@ -391,7 +391,7 @@ function ENT:StartSpin(ply)
 					self:SetWinAmount(REDSUSHI.CONFIG.CreditValue * self:GetBetAmount())
 					
 					if item1 == REDSUSHI.Symbols.JACKPOT and item2 == REDSUSHI.Symbols.JACKPOT and item3 == REDSUSHI.Symbols.JACKPOT then
-						REDSUSHI.CONFIG.AddMoney(ply, isWin.pay * (REDSUSHI.CONFIG.CreditValue * self:GetBetAmount()))
+						REDSUSHI.CONFIG.addMoney(ply, isWin.pay * (REDSUSHI.CONFIG.CreditValue * self:GetBetAmount()))
 						self:TriggerJackpot()
 					else
 						if self:GetWinAmount() > REDSUSHI.CONFIG.SubJackpotValue then
@@ -408,7 +408,7 @@ function ENT:StartSpin(ply)
 					end
 
 					
-					REDSUSHI.CONFIG.AddMoney(ply, isWin.pay * (REDSUSHI.CONFIG.CreditValue * self:GetBetAmount()))
+					REDSUSHI.CONFIG.addMoney(ply, isWin.pay * (REDSUSHI.CONFIG.CreditValue * self:GetBetAmount()))
 					ply:ChatPrint("[SLOT] You won $"..(isWin.pay * REDSUSHI.CONFIG.CreditValue * self:GetBetAmount()).."!")
 				else
 					self:EmitSound("redsushi/stop3.mp3")

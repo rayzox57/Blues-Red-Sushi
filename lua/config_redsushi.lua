@@ -58,6 +58,20 @@ REDSUSHI.CONFIG.Payouts = {
 	ANY_TWO_CHERRIES = 5
 }
 
+--You can change money Method
+	--DRP = DarkRP Money System
+	--PS1 = PointShop1 Money
+	--PS2 = PointShop2 Money
+	--PPS2 = Premium PointShop2 Money
+	--CSM = Custom Money System (Use all override functions in bottom of this file)
+	--FREE = No Money (Just for fun)
+
+	REDSUSHI.CONFIG.Curreny = "PS2"
+
+	--You can change this to anything, or thing. This gets added before any money amount is shown
+	REDSUSHI.CONFIG.CurrenyPrefixBefore = ""
+	REDSUSHI.CONFIG.CurrenyPrefixAfter = "PTS"
+
 --Don't remove this line
 if SERVER then
 	--These are the chances for the machine. The way how you calculate chance for each symbol
@@ -73,27 +87,6 @@ if SERVER then
 		[REDSUSHI.Symbols.VOID] = 140 --This is nothing (lands inbetween the symbols)
 	}
 end
-
-
---Add support for custom currencies below.
---This will support anything as long as you can provide the correct function for them
---If you do not know what you are doing here don't mess with it, instead open a support ticket
---as doing something wrong here could created a money exploit.
-REDSUSHI.CONFIG.AddMoney = function(ply, amount)
-	--DarkRP
-	ply:addMoney(amount)
-end
-
-REDSUSHI.CONFIG.TakeMoney = function(ply, amount)
-	--DarkRP
-	ply:addMoney(-amount)
-end
-
-REDSUSHI.CONFIG.CanAfford = function(ply, amount)
-	--DarkRP
-	return ply:canAfford(amount)
-end
-
 
 --[[-------------------------------------------------------------------------
 ADVANCED USERS ONLY
@@ -184,3 +177,107 @@ REDSUSHI.WinTable = {
 	}
 }
 end
+
+--[[-------------------------------------------------------------------------
+Custom Money Method
+---------------------------------------------------------------------------]]
+
+REDSUSHI.CONFIG.custom = {}
+
+REDSUSHI.CONFIG.custom.addMoney = function(ply, amount)
+	
+end
+
+REDSUSHI.CONFIG.custom.canAfford = function(ply, amount)
+	return true
+end
+
+REDSUSHI.CONFIG.custom.takeMoney = function(ply, amount)
+	
+end
+
+REDSUSHI.CONFIG.custom.getMoney = function(ply)
+
+end
+
+--[[-------------------------------------------------------------------------
+Money Method (!! DON'T CHANGE THIS !!)
+---------------------------------------------------------------------------]]
+
+REDSUSHI.CONFIG.addMoney = function(ply, amount)
+	if CLIENT then return end
+	local c = REDSUSHI.CONFIG.Curreny
+	if(c == "DRP") then
+		ply:addMoney(amount)
+	elseif(c == "PS1") then
+		ply:PS_GivePoints(amount)
+	elseif(c == "PS2") then
+		ply:PS2_AddStandardPoints(amount)
+	elseif(c == "PPS2") then
+		ply:PS2_AddPremiumPoints(amount)
+	elseif(c == "CSM") then
+		REDSUSHI.CONFIG.custom.addMoney(ply,amount)
+	end
+end
+
+REDSUSHI.CONFIG.canAfford = function(ply, amount)
+	local c = REDSUSHI.CONFIG.Curreny
+	if(c == "DRP") then
+		return ply:canAfford(amount)
+	elseif(c == "PS1") then
+		return ply:PS_HasPoints(amount)
+	elseif(c == "PS2") then
+		return ply.PS2_Wallet.points - amount >= 0
+	elseif(c == "PPS2") then
+		return ply.PS2_Wallet.premiumPoints - amount >= 0
+	elseif(c == "CSM") then
+		return REDSUSHI.CONFIG.custom.canAfford(ply,amount)
+	end
+	return true
+end
+
+REDSUSHI.CONFIG.takeMoney = function(ply, amount)
+	if CLIENT then return end
+	local c = REDSUSHI.CONFIG.Curreny
+	if(c == "DRP") then
+		ply:addMoney(amount * -1)
+	elseif(c == "PS1") then
+		ply:PS_TakePoints(amount)
+	elseif(c == "PS2") then
+		ply:PS2_AddStandardPoints(-amount)
+	elseif(c == "PPS2") then
+		ply:PS2_AddPremiumPoints(-amount)
+	elseif(c == "CSM") then
+		REDSUSHI.CONFIG.custom.takeMoney(ply,amount)
+	end
+end
+
+REDSUSHI.CONFIG.getMoney = function(ply)
+	if(c == "DRP") then
+		return ply:getDarkRPVar("money")
+	elseif(c == "PS1") then
+		return ply:PS_GetPoints()
+	elseif(c == "PS2") then
+		return ply.PS2_Wallet.points
+	elseif(c == "PPS2") then
+		return ply.PS2_Wallet.premiumPoints
+	elseif(c == "CSM") then
+		return REDSUSHI.CONFIG.custom.getMoney(ply)
+	end
+	return 0
+end
+
+REDSUSHI.CONFIG.showMoney = function(amount)
+	local f = amount
+	while true do   
+	   	f, k = string.gsub(f, "^(-?%d+)(%d%d%d)", '%1,%2')
+	   	if (k==0) then
+			break 
+		end
+	end
+
+	if(REDSUSHI.CONFIG.Curreny == "FREE") then f = "0" end
+
+	return string.format("%s%s%s",REDSUSHI.CONFIG.CurrenyPrefixBefore,f,REDSUSHI.CONFIG.CurrenyPrefixAfter)
+end
+

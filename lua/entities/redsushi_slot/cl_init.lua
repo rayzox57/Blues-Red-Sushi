@@ -229,7 +229,7 @@ function ENT:Draw()
 		end
 
 		--Draw credit value
-		draw.SimpleText("$"..string.Comma(REDSUSHI.CONFIG.CreditValue), "RedSushi2", 375, 133, Color(255, 255, 255), 1, 1)
+		draw.SimpleText(REDSUSHI.CONFIG.showMoney(REDSUSHI.CONFIG.CreditValue), "RedSushi2", 375, 133, Color(255, 255, 255), 1, 1)
 
 		--Draw win amount
 		draw.SimpleText(self:GetWinAmount().." CR", "RedSushi1", 68, 266, Color(247, 280, 65), 1, 1)
@@ -241,7 +241,7 @@ function ENT:Draw()
 		draw.SimpleText(self:GetBetAmount().." CR", "RedSushi1", 305, 266, Color(247, 280, 65), 1, 1)
 
 		--Draw money in credits
-		draw.SimpleText(math.floor(LocalPlayer():getDarkRPVar("money") / REDSUSHI.CONFIG.CreditValue).." CR", "RedSushi1", 424, 266, Color(247, 280, 65), 1, 1)
+		draw.SimpleText(math.floor(REDSUSHI.CONFIG.getMoney(LocalPlayer()) / REDSUSHI.CONFIG.CreditValue).." CR", "RedSushi1", 424, 266, Color(247, 280, 65), 1, 1)
 	
 
 		if self:GetIsJackpotScreen() then
